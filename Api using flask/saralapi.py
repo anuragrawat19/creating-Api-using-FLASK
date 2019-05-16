@@ -1,7 +1,12 @@
-from flask import Flask,jsonify,abort,request
-import json
-import os.path
-app1=Flask(__name__)
+#importing flask(lightweight web frame of Python,provides the user with libraries, modules and tools to help build Web-Applications )
+#importing jsonify() function in flask return an object that already has the appropriate content-type header
+#importing abort as it properly wraps errors into a HTTPException so it will have the same behavior
+#importing request as The data from a client's web page is sent to the server as a global request object. In order to process the request data
+from flask import Flask,jsonify,abort,request 
+import json # importing json to convert the python dictionary above into a JSON string that can be written into a file. 
+import os.path # importing os.path in order to check whether a particular file exist or not in system or not
+
+app1=Flask(__name__)   # giving instance of Flask class to a variable "app1"
 
 
 
@@ -68,7 +73,7 @@ submission=[
 
 
 
-@app1.route("/saral/courses",methods=["GET"])
+@app1.route("/saral/courses",methods=["GET"]) #get the details of all the courses  and storing them into a json file
 
 def task():
 	if os.path.isfile("file.json"):
@@ -81,7 +86,7 @@ def task():
 
 	return jsonify({"courses":details})
 
-@app1.route("/saral/courses/<int:course_id>",methods=["GET"])
+@app1.route("/saral/courses/<int:course_id>",methods=["GET"])#accessing a particualr course from the course id
 
 def tasks(course_id):
 	with open ('file.json') as file1:
@@ -95,7 +100,7 @@ def tasks(course_id):
 
 
 
-@app1.route("/saral/courses/<int:course_id>",methods=["PUT"])
+@app1.route("/saral/courses/<int:course_id>",methods=["PUT"]) # editing the details of  a particualr course using PUT method
 
 def rename(course_id):
 	# task=[task for task in details if course_id==task["course_id"]]
@@ -116,7 +121,7 @@ def rename(course_id):
 
 
 
-@app1.route("/saral/courses",methods=["POST"])
+@app1.route("/saral/courses",methods=["POST"])# adding a new course in the list "details" using POST method
 def update():
 
 	if not request.json or not "course_name" in request.json:
@@ -131,7 +136,7 @@ def update():
 		json.dump(details,file1)
 	return jsonify({"task":task})
 
-@app1.route("/saral/courses/<int:course_id>/exercise")
+@app1.route("/saral/courses/<int:course_id>/exercise")# accessing the sub exercises of all the course and storing it to a json file
 
 def exercise(course_id):
 	with open("file.json","r") as file1:
@@ -151,7 +156,7 @@ def exercise(course_id):
 	
 
 
-@app1.route("/saral/courses/<int:course_id>/exercise/<int:exercise_id>")
+@app1.route("/saral/courses/<int:course_id>/exercise/<int:exercise_id>")#accessing  the particualr sub exercises of a course using GET method
 
 def particular_exercises(exercise_id,course_id):
 	task=[task  for task in hint if task["exercise_id"]==exercise_id and course_id==task["course_id"]]
@@ -159,7 +164,7 @@ def particular_exercises(exercise_id,course_id):
 		abort(404)
 	return jsonify({"exercise":task})
 
-@app1.route("/saral/courses/<int:course_id>/exercise",methods=["POST"])
+@app1.route("/saral/courses/<int:course_id>/exercise",methods=["POST"]) #adding a new sub exersies into a course uisng post method
 
 def update_exercise(course_id):
 	task1=[task for task in hint if task["course_id"]==course_id] 
@@ -177,7 +182,7 @@ def update_exercise(course_id):
 
 
 
-@app1.route("/saral/courses/<int:course_id>/exercise/<int:exercise_id>/feedback")
+@app1.route("/saral/courses/<int:course_id>/exercise/<int:exercise_id>/feedback")#accessing the feedback of a particular sub exercise of a course using GET 
 def getsubmision(course_id,exercise_id):
 	sub=[sub for sub in submission if  sub["course_id"]==course_id and sub["exercise_id"]==exercise_id]
 	if len(sub)==0:
@@ -186,7 +191,7 @@ def getsubmision(course_id,exercise_id):
 
 
 
-@app1.route("/saral/courses/<int:course_id>/exercise/<int:exercise_id>/feedback",methods=["POST"])
+@app1.route("/saral/courses/<int:course_id>/exercise/<int:exercise_id>/feedback",methods=["POST"])#adding new feedback to a particukar sub exercise using POST method
 def posting_submission(course_id,exercise_id):
 	task=[task for task in submission if task["course_id"]==course_id and task["exercise_id"]==exercise_id]
 	feedback={
